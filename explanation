@@ -1,0 +1,38 @@
+ALU Implementation in Verilog
+
+Register File
+The CPU has a register file with 8 registers named Reg0, Reg1, ..., Reg7. Each register is 16 bits wide.
+
+Memory 
+The memory has a size of 1024X16
+
+Operand Selection
+The CPU has two 3-bit operand selection control lines: reg1 and reg2.
+These control lines determine which register is selected as the operand for the ALU. The operand selection is based on the following table:
+
+Operand Selection	Selected Register
+000	Reg0
+001	Reg1
+...	...
+111	Reg7
+
+The ALU performs various operations on the selected operands based on the control line "operation" using the following codes:
+
+Operation Code	Operation	Flags
+0000	Increment reg1 value
+0001	Decrement 	reg1 value
+0010	Subtraction (reg1value - reg2value)	
+0011	Addition (reg1value + reg2value)	
+0100	Store	  Store the value of register reg1 to the memory location with address stored in register reg2
+0101	Load	Load a copy of the content of memory location (at address stored in reg2) to register reg1
+
+
+
+Inputs:
+operation: A 3-bit input wire that represents the operation code.
+reg1: A 3-bit input wire that represents the operand selection for Op1.
+reg2: A 3-bit input wire that represents the operand selection for Op2.
+Outputs:
+result: A 16-bit output wire that represents the result of the ALU operation.
+status: A 3-bit output wire that represents the status flags.
+
