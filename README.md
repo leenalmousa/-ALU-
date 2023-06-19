@@ -109,15 +109,15 @@ module inncrement(o,b,a);
         bitadder b1 (o,b,1'b1,a);
 endmodule
 
-module bitadder(o,b,c,a);
+module bitadder_16(o,b,c,a);
  //adds 2 numbers c+a
-    input [15:0]a;
-    input [15:0]c;
-    output [15:0]b;
-    wire [15:0]carry;// will contain the carry of each previous addition 
-     wire [15:0]x;
-    output [2:0]o; //o[0]: will contain  one when overflowing o[1]:will return 1 when the output is  zero ando[2: will produce one when the addition produces a carry
-   wire h;
+	input [15:0]a;
+	input [15:0]c;  
+ 	output [15:0]b;
+	wire [15:0]carry;		// will contain the carry of each previous addition 
+	wire [15:0]x;
+	output [2:0]o;			 //o[0]: will contain  one when overflowing o[1]:will return 1 when the output is  zero ando[2: will produce one when the addition produces a carry
+	 wire h;
         fulladder f0 (b[0],carry[0],a[0],1'b0,c[0]);
         fulladder f1 (b[1],carry[1],a[1],carry[0],c[1]);
         fulladder f2 (b[2],carry[2],a[2],carry[1],c[2]);
@@ -135,14 +135,15 @@ module bitadder(o,b,c,a);
         fulladder f14(b[14],carry[14],a[14],carry[13],c[14]);
         fulladder f15(b[15],o[2],a[15],carry[14],c[15]);
                  
-       or16bititself o1(h,b);
-      not(o[1],h);
-        xor( o[0],carry[14],o[2]);
-    
+	      or16bititself o1(h,b);
+	      not(o[1],h);
+	      xor( o[0],carry[14],o[2]);
+	    
 endmodule
 
    module fulladder(sum,carry,a,b,c);
-input a,b,c;
+   // a 3 bit full adder
+	input a,b,c;
     output sum, carry;
         
         wire x,y,z;//0,1,1
@@ -165,13 +166,13 @@ endmodule
 
    
     module  regfile (out1,out2,in1,in2,data_in,RDWR);
-    input [2:0]in1;
-    input [2:0]in2;
-    input RDWR;
-    input [15:0]data_in;
-    output reg [15:0]out1;
-    output reg [15:0]out2;
-    reg [15:0]MEM[7:0];
+    input [2:0]in1;// number of register i want
+    input [2:0]in2;// number of register i want
+    input RDWR;// choice line reads 1 and writes if 0
+    input [15:0]data_in;// the data i want to write on the memory
+    output reg [15:0]out1;// the value stored in the register (in1)
+    output reg [15:0]out2;// the value stored in the register (in2)
+    reg [15:0]MEM[7:0];// creation of register
     initial
     begin
     MEM[0]=0;
@@ -187,7 +188,7 @@ endmodule
     always@(in1 or in2 or RDWR or data_in)
     begin
     
-        if(RDWR==1'b0)
+        if(RDWR==1'b0)		// storing in the memory  in case of RDWR=0
             begin
                 case(in1)
                 3'b000:MEM[0]<=data_in;
@@ -201,7 +202,7 @@ endmodule
                endcase;
             end
         else 
-            begin
+            begin		// reading of the  memory  in case of RDWR=1
                 case(in1)
                 3'b000:out1<=MEM[0];
                 3'b001:out1<=MEM[1];
@@ -226,31 +227,7 @@ endmodule
         
     end
     endmodule
-    module left_shift(input1,out,o);
- 
-output [15:0] out;
-input  [15:0] input1;
- output [2:0] o;
- wire h;
- or(out[0],input1[15],input1[15]);
- or(out[1],input1[0],input1[0]);
- or(out[2],input1[1],input1[1]);
- or(out[3],input1[2],input1[2]);
- or(out[4],input1[3],input1[3]);
- or(out[5],input1[4],input1[4]);
- or(out[6],input1[5],input1[5]);
- or(out[7],input1[6],input1[6]);
- or(out[8],input1[7],input1[7]);
- or(out[9],input1[8],input1[8]);
- or(out[10],input1[9],input1[9]);
- or(out[11],input1[10],input1[10]);
- or(out[12],input1[11],input1[11]);
- or(out[13],input1[12],input1[12]);
- or(out[14],input1[13],input1[13]);
- or(out[15],input1[14],input1[14]);
-   or16bititself o1(h,out);
-      not(o[1],h);
-endmodule
+  
  module multiplexer_14_1(X, A0, A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13, S);
    parameter WIDTH=16;  
    output reg[WIDTH-1:0] X;//OUTPUT
@@ -316,17 +293,25 @@ wire nt_3,nt_0,nt_flg;
 endmodule
 
 module ALU (reg1,reg2,operation,result,status);
-    input [2:0]reg1,reg2;
+    input [2:0]reg1,reg2;// i can enter the num of register i want 
     input [3:0]operation;
+	//0000 Increment reg1 val
+	//0001 Decrement reg2 val
+	//0010 Subtraction Result = reg1 - reg2 
+	//0011 Addition Result = reg1 + regt2
+	//0100 Store Store the value of register Op1 to the memory location with address stored in register Op2
+	//0101 Load Load a copy of the content of memory location (at address stored in Op2) to register Op1
     output[15:0] result;
     output[2:0]status;
     wire clk;
     wire store_flag,load_flag;
+	// store flag returns one when the operation is 4 zero else wise 
+    //load flag returns one when the operation is 5 and zero else wise
     wire [15:0]register1;
     wire [15:0]register2;
     wire [15:0]a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13;
     wire [2:0]s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13;
-    
+      //calling all functions so that with each  neg edge of the clk all thse will be activated
     myClock clk1(clk);
     regfile  regfile1(register1,register2,reg1,reg2,a6,load_flag);
     inncrement i1(s0, a0, register1);
