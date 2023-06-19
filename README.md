@@ -265,19 +265,21 @@ endmodule
 end
 endmodule
 
-module myClock (clk);
+module myClock (clk);// creation of a clock that's period is 2 
 output reg clk;
 initial clk=0;
     always 
     #1 clk =~clk;
 endmodule
+
 module store_flg_mod(store_flg,operation);
 output store_flg;
 input [3:0]operation;
-wire nt_3,nt_1,nt_flg;
+wire nt_3,nt_1,nt_flg0,n_t;
     not(nt_3, operation[3]);
     not(nt_1, operation[1]);
-    and(nt_flg,nt_3,nt_1,operation[2],operation[0]);
+     not(nt_0, operation[0]);
+    and(nt_flg,nt_3,nt_1,operation[2],nt_0);
     not(store_flg,nt_flg);
 endmodule
 
@@ -285,10 +287,10 @@ endmodule
 module load_flg_mod(load_flg,operation);
 output load_flg;
 input [3:0]operation;
-wire nt_3,nt_0,nt_flg;
+wire nt_3,nt_1,nt_flg;
     not(nt_3, operation[3]);
-    not(nt_0, operation[0]);
-    and(nt_flg,nt_3,nt_0,operation[2],operation[1]);
+    not(nt_1, operation[1]);
+    and(nt_flg,nt_3,nt_1,operation[2],operation[0]);
     not(load_flg,nt_flg);
 endmodule
 
@@ -320,7 +322,7 @@ module ALU (reg1,reg2,operation,result,status);
     bitadder b1(s3,a3, register1, register2);
     store_flg_mod sfx1(store_flag,operation);
     load_flg_mod lfx1(load_flag,operation);
-    ram ram1(s6,a6, clk, register1, register2, store_flag);
+    ram ram1(s5,a5, clk, register1, register2, store_flag);
  
     //#1 $display ("%b %b ",result_t,status_t);
     multiplexer_14_1 result_mux(result, a0, a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13, operation);
