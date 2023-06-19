@@ -106,7 +106,7 @@ module inncrement(o,b,a);
     output [15:0]b;
     wire [15:0]carry;
     output  [2:0] o;
-        bitadder b1 (o,b,1'b1,a);
+        bitadder_16 b1 (o,b,1'b1,a);
 endmodule
 
 module bitadder_16(o,b,c,a);
@@ -275,7 +275,7 @@ endmodule
 module store_flg_mod(store_flg,operation);
 output store_flg;
 input [3:0]operation;
-wire nt_3,nt_1,nt_flg0,n_t;
+wire nt_3,nt_1,nt_flg,n_t;
     not(nt_3, operation[3]);
     not(nt_1, operation[1]);
      not(nt_0, operation[0]);
@@ -315,16 +315,14 @@ module ALU (reg1,reg2,operation,result,status);
     wire [2:0]s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13;
       //calling all functions so that with each  neg edge of the clk all thse will be activated
     myClock clk1(clk);
-    regfile  regfile1(register1,register2,reg1,reg2,a6,load_flag);
+    regfile  regfile1(register1,register2,reg1,reg2,a5,load_flag);
     inncrement i1(s0, a0, register1);
     decrement d1(s1, a1, register1);
     subtractor ss(s2, a2, register1, register2);
-    bitadder b1(s3,a3, register1, register2);
+    bitadder_16 b1(s3,a3, register1, register2);
     store_flg_mod sfx1(store_flag,operation);
     load_flg_mod lfx1(load_flag,operation);
     ram ram1(s5,a5, clk, register1, register2, store_flag);
- 
-    //#1 $display ("%b %b ",result_t,status_t);
     multiplexer_14_1 result_mux(result, a0, a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13, operation);
     multiplexer_14_1 status_mux(status, s0, s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13, operation);
 
@@ -374,14 +372,14 @@ operation_t=3 ;
 reg1_t=3  ; 
 reg2_t=5 ;
 
-operation_t=5 ;
+operation_t=4 ;
 #5 $display ("store value in reg (3)  to mem [5] %b %b ",a1.ram1.MEMO[5],status_t);
 
 // case 5
 reg1_t= 4  ; 
 reg2_t= 5;
 
-operation_t=6 ;
+operation_t=5 ;
 #6 $display ("load from mem[5] save the value in reg[4]  %b %b ",a1.regfile1.MEM[4],status_t);
 // case 6
 reg1_t= 2  ; 
