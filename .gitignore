@@ -1,0 +1,19 @@
+# Icarus Verilog / simulator artifacts
+*.vvp
+*.vcd
+*.fst
+*.lxt
+alu_tb
+a.out
+
+# ModelSim / QuestaSim
+work/
+transcript
+wlf*
+
+# Editor / OS
+.vscode/
+.idea/
+*~
+.DS_Store
+Thumbs.db
