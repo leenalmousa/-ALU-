@@ -76,42 +76,6 @@ A self-contained `test` module at the bottom of [`alu.v`](alu.v) drives six case
 
 The register file is pre-initialised so `Reg<i> = i`.
 
-## How to run
-
-### Icarus Verilog (open-source, easiest)
-
-```bash
-# install once
-sudo apt install iverilog gtkwave         # Ubuntu/WSL
-brew install icarus-verilog gtkwave       # macOS
-
-# simulate
-iverilog -o alu_tb alu.v
-vvp alu_tb
-```
-
-You should see six `$display` lines, one per test case, with the result bus and the three status bits.
-
-### ModelSim / QuestaSim
-
-```tcl
-vlib work
-vlog alu.v
-vsim -c work.test -do "run -all; quit"
-```
-
-## Files
-
-```
-.
-├── alu.v          # all Verilog modules + self-contained testbench
-├── README.md
-└── LICENSE
-```
-
-## Course context
-
-Built for the Digital Logic / Computer Architecture course at PSUT. Demonstrates structural Verilog at the gate level (no behavioural arithmetic), datapath construction, integration with register file + RAM, and the simulation flow with a `$display`-driven testbench.
 
 ## Author
 
