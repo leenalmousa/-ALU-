@@ -1,6 +1,6 @@
 # 16-bit ALU in Verilog (gate-level)
 
-A 16-bit **Arithmetic Logic Unit** built in **structural Verilog from `xor` / `and` / `or` / `not` primitives** &mdash; no behavioural `+` or `-` operators. The ALU is wired to an 8 × 16-bit register file and a 1024 × 16-bit RAM, and exposes six instructions (increment, decrement, subtract, add, store, load) selected by a 4-bit opcode.
+A 16-bit **Arithmetic Logic Unit** built in **structural Verilog from `xor` / `and` / `or` / `not` primitives** ; no behavioural `+` or `-` operators. The ALU is wired to an 8 × 16-bit register file and a 1024 × 16-bit RAM, and exposes six instructions (increment, decrement, subtract, add, store, load) selected by a 4-bit opcode.
 
 [![Language](https://img.shields.io/badge/HDL-Verilog-FF6F00)](alu.v)
 [![Style](https://img.shields.io/badge/Style-Gate--level%20structural-525252)](#design)
